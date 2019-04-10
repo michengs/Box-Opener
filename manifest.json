@@ -1,18 +1,18 @@
 {
-	"files": {
-		"README.md": "278fa716ce5e0e8bd014fe54b60617ade60e744778489e68a846e06d9e5ec510",
-		"config.json": "00a648743d8d32b445072c435a3b8b418546e01fe542d8d376be5799a4885b96",
-		"index.js": "eac05cfd5a399169faa844a5c9c9665440de0597a4e71484a71df59a0c00860b",
-		"module.json": "3beec5c8aa12a65b5d68514e57b2eb6ba258745ede143ee4d4585499f578a4cb"
-	},
-	"defs": {
-		"C_GACHA_TRY": 1,
-		"C_PLAYER_LOCATION": 5,
-		"C_USE_ITEM": 3,
-		"S_GACHA_END": 1,
-		"S_GACHA_START": 1,
-		"S_INVEN": 17,
-		"S_SYSTEM_MESSAGE": 1,
-		"S_SYSTEM_MESSAGE_LOOT_ITEM": 1
-	}
+    "files": {
+        "README.md": "825d49cb92f45e223b041a865b692fe99ef80ee93def58e14172079bc137a57b",
+        "index.js": "64c1575cf85e702b35c222a46991acd2787b16e9f55c6efd62c352802d8350a6",
+        "module.json": "43d02e2738ecf91180da2a6815f6fe0f3eff0d08546ef3eefc5b24690e97aecb",
+        "settings_migrator.js": "dbe2feb6b0d15eb98fcc51c0c1aa9ebec5664df29a4fc5fee1de892be584d49b"
+    },
+    "defs": {
+        "C_GACHA_TRY": 1,
+        "C_PLAYER_LOCATION": 5,
+        "C_USE_ITEM": 3,
+        "S_GACHA_END": 1,
+        "S_GACHA_START": 1,
+        "S_INVEN": 18,
+        "S_SYSTEM_MESSAGE": 1,
+        "S_SYSTEM_MESSAGE_LOOT_ITEM": 1
+    }
 }

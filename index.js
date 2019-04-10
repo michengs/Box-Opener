@@ -1,10 +1,16 @@
 module.exports = function BoxOpener(mod) {
+	const command = mod.command || mod.require.command;
 	
-	let	{
-		enabled = false,
-		useDelay = false,
-		delay,
-	} = require('./config.json');
+	if (mod.proxyAuthor !== 'caali') {
+		const options = require('./module').options
+		if (options) {
+			const settingsVersion = options.settingsVersion
+			if (settingsVersion) {
+				mod.settings = require('./' + (options.settingsMigrator || 'module_settings_migrator.js'))(mod.settings._version, settingsVersion, mod.settings)
+				mod.settings._version = settingsVersion
+			}
+		}
+	}
 	
 	let hooks = [],
 		boxEvent = null,
@@ -19,37 +25,37 @@ module.exports = function BoxOpener(mod) {
 		boxId = 166901, // MWA box as default.
 		inventory = null;
 	
-	mod.command.add('开盒', () => {
-		if (!enabled && !scanning) {
+	command.add('开盒', () => {
+		if (!mod.settings.enabled && !scanning) {
 			scanning = true;
 			load();
-			mod.command.message('请正常打开一个盒子, 脚本会持续打开它');
+			command.message('请正常打开一个盒子, 脚本会持续打开它');
 		} else {
 			stop();
 		}
 	});
 	
-	mod.command.add('开盒延迟', (arg) => {
+	command.add('开盒延迟', (arg) => {
 		if (arg === "0") {
-			useDelay = false;
-			delay = 5500;
-			mod.command.message('设置开盒最小间隔延迟为: ' + '无延迟');
+			mod.settings.useDelay = false;
+			mod.settings.delay = 5500;
+			command.message('设置开盒最小间隔延迟为: ' + '无延迟');
 		} else if (!isNaN(arg)) {
-			useDelay = true;
-			delay = parseInt(arg);
-			mod.command.message('设置开盒最小间隔延迟为: <font color="#56B4E9">' + (delay / 1000) + ' </font>秒/盒');
+			mod.settings.useDelay = true;
+			mod.settings.delay = parseInt(arg);
+			command.message('设置开盒最小间隔延迟为: <font color="#56B4E9">' + (mod.settings.delay / 1000) + ' </font>秒/盒');
 		} else {
-			mod.command.message('设置开盒最小间隔延迟为: <font color="#56B4E9">' + (useDelay ? (delay / 1000) + '秒/盒' : '无延迟' ) + '</font>');
+			command.message('设置开盒最小间隔延迟为: <font color="#56B4E9">' + (mod.settings.useDelay ? (mod.settings.delay / 1000) + '秒/盒' : '无延迟' ) + '</font>');
 		}
-    });
+	});
 	
 	mod.hook('C_PLAYER_LOCATION', 5, (event) => {
 		location = event
 	});
 	
 	function load() {
-		hook('S_INVEN', 17, (event) => {
-			if (enabled) {
+		hook('S_INVEN', 18, (event) => {
+			if (mod.settings.enabled) {
 				isLooting = false; // S_INVEN comes only after all S_SYSTEM_MESSAGE_LOOT_ITEM
 				
 				if (event.first) {
@@ -73,7 +79,7 @@ module.exports = function BoxOpener(mod) {
 						}
 					}
 					if (!box) {
-						mod.command.message('所有盒子开完 <font color="#E69F00">停止脚本</font>');
+						command.message('所有盒子开完 <font color="#E69F00">停止脚本</font>');
 						stop();
 					}
 					inventory.splice(0, inventory.length)
@@ -88,17 +94,17 @@ module.exports = function BoxOpener(mod) {
 				if (scanning) {
 					boxEvent = event;
 					boxId = event.id;
-					mod.command.message(
+					command.message(
 						'选定盒子编号: <font color="#00FFFF">' + boxId + '</font> \n' +
 						'\t - 自动开盒脚本: <font color="#56B4E9">启动</font> \n' +
-						'\t - 开盒间隔设定: <font color="#56B4E9">' + (useDelay ? (delay / 1000) + ' 秒/盒' : '无延迟') + '</font>'
+						'\t - 开盒间隔设定: <font color="#56B4E9">' + (mod.settings.useDelay ? (mod.settings.delay / 1000) + ' 秒/盒' : '无延迟') + '</font>'
 					);
 					scanning = false;
 					
 					let d = new Date();
 					statStarted = d.getTime();
-					enabled = true;
-					timer = setTimeout(openBox,delay);
+					mod.settings.enabled = true;
+					timer = setTimeout(openBox, mod.settings.delay);
 				}
 			}
 		});
@@ -107,7 +113,7 @@ module.exports = function BoxOpener(mod) {
 			if (!gacha_detected && !isLooting && boxEvent) {
 				isLooting = true;
 				statOpened++;
-				if (!useDelay) {
+				if (!mod.settings.useDelay) {
 					clearTimeout(timer);
 					openBox();
 				}
@@ -117,7 +123,7 @@ module.exports = function BoxOpener(mod) {
 		hook('S_GACHA_END', 1, (event) => {
 			if (boxEvent) {
 				statOpened++;
-				if (!useDelay) {
+				if (!mod.settings.useDelay) {
 					clearTimeout(timer);
 					openBox();
 				}
@@ -127,27 +133,27 @@ module.exports = function BoxOpener(mod) {
 		hook('S_SYSTEM_MESSAGE', 1, (event) => {
 			const msg = mod.parseSystemMessage(event.message);
 			if (msg.id === 'SMT_ITEM_MIX_NEED_METERIAL' || msg.id === 'SMT_CANT_CONVERT_NOW') {
-				mod.command.message('无法再开启盒子 <font color="#E69F00">脚本停止</font>');
+				command.message('无法再开启盒子 <font color="#E69F00">脚本停止</font>');
 				stop();
 			}
-        });
+		});
 		
 		hook('S_GACHA_START', 1, (event) => {
 			gacha_detected = true;
 			mod.send('C_GACHA_TRY', 1, {
 				id: event.id
 			})
-        });
+		});
 	}
 	
 	function openBox() {
 		boxEvent.loc = location.loc;
 		boxEvent.w = location.w;
 		mod.send('C_USE_ITEM', 3, boxEvent);
-		if (useDelay) {
-			statUsed++;	// counter for used items other than boxes
+		if (mod.settings.useDelay) {
+			statUsed++; // counter for used items other than boxes
 		}
-		timer = setTimeout(openBox,delay);
+		timer = setTimeout(openBox, mod.settings.delay);
 	}
 	
 	function addZero(i) {
@@ -161,13 +167,13 @@ module.exports = function BoxOpener(mod) {
 		unload();
 		if(scanning) {
 			scanning = false;
-			mod.command.message('自动开盒脚本 <font color="#E69F00">关闭</font>');
+			command.message('自动开盒脚本 <font color="#E69F00">关闭</font>');
 		} else {
 			clearTimeout(timer);
-			enabled = false;
+			mod.settings.enabled = false;
 			gacha_detected = false;
 			boxEvent = null;
-			if(useDelay && statOpened == 0) {
+			if(mod.settings.useDelay && statOpened == 0) {
 				statOpened = statUsed;
 			}
 			let d = new Date();
@@ -178,7 +184,7 @@ module.exports = function BoxOpener(mod) {
 			let h = addZero(d.getHours());
 			let m = addZero(d.getMinutes());
 			let s = addZero(d.getSeconds());
-			mod.command.message(
+			command.message(
 				'自动开盒脚本 已完成: <font color="#FF0000">' + statOpened + '</font> 个盒子 \n' +
 				'\t - 共计用时: <font color="#FF0000">' + (h + ":" + m + ":" + s) + '</font> \n' +
 				'\t - 平均用时: <font color="#FF0000">' + ((timeElapsedMSec / statOpened) / 1000).toPrecision(2) + '</font> 秒/盒'

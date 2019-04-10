@@ -1,12 +1,16 @@
 {
-	"disableAutoUpdate": false,
-	"name": "Box-Opener",
-	"options": {
-		"niceName": "自动开盒",
-		"guiName": "自动开盒"
-	},
-	"author": "ZC",
-	"description": "自动连续开盒脚本",
-	"servers": ["https://raw.githubusercontent.com/zc149352394/Box-Opener/master/"],
-	"supportUrl": "https://github.com/zc149352394/Box-Opener/issues"
+    "disableAutoUpdate": false,
+    "name": "Box-Opener",
+    "options": {
+        "niceName": "自动开盒",
+        "guiName": "自动开盒",
+        "settingsFile": "config.json",
+        "settingsMigrator": "settings_migrator.js",
+        "settingsVersion": 1
+    },
+    "author": "ZC",
+    "description": "自动连续开盒脚本",
+    "servers": ["https://raw.githubusercontent.com/zc149352394/Box-Opener/master/"],
+    "supportUrl": "https://github.com/zc149352394/Box-Opener/issues",
+    "version": "80.04"
 }
