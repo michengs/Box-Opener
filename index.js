@@ -6,7 +6,7 @@ module.exports = function BoxOpener(mod) {
 		if (options) {
 			const settingsVersion = options.settingsVersion
 			if (settingsVersion) {
-				mod.settings = require('./' + (options.settingsMigrator || 'module_settings_migrator.js'))(mod.settings._version, settingsVersion, mod.settings)
+				mod.settings = require('./' + (options.settingsMigrator || 'settings_migrator.js'))(mod.settings._version, settingsVersion, mod.settings)
 				mod.settings._version = settingsVersion
 			}
 		}
@@ -25,7 +25,7 @@ module.exports = function BoxOpener(mod) {
 		boxId = 166901, // MWA box as default.
 		inventory = null;
 	
-	command.add('开盒', () => {
+	mod.command.add('开盒', () => {
 		if (!mod.settings.enabled && !scanning) {
 			scanning = true;
 			load();
@@ -35,7 +35,7 @@ module.exports = function BoxOpener(mod) {
 		}
 	});
 	
-	command.add('开盒延迟', (arg) => {
+	mod.command.add('开盒延迟', (arg) => {
 		if (arg === "0") {
 			mod.settings.useDelay = false;
 			mod.settings.delay = 5500;
