@@ -12,5 +12,5 @@
     "description": "自动连续开盒脚本",
     "servers": ["https://raw.githubusercontent.com/zc149352394/Box-Opener/master/"],
     "supportUrl": "https://github.com/zc149352394/Box-Opener/issues",
-    "version": "80.04"
+    "version": "81.03"
 }

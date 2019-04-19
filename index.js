@@ -25,21 +25,21 @@ module.exports = function BoxOpener(mod) {
 		boxId = 166901, // MWA box as default.
 		inventory = null;
 	
-	mod.command.add('开盒', () => {
+	mod.command.add("开盒", () => {
 		if (!mod.settings.enabled && !scanning) {
 			scanning = true;
 			load();
-			command.message('请正常打开一个盒子, 脚本会持续打开它');
+			command.message("请正常打开一个盒子, 脚本会持续打开它");
 		} else {
 			stop();
 		}
 	});
 	
-	mod.command.add('开盒延迟', (arg) => {
+	mod.command.add("开盒延迟", (arg) => {
 		if (arg === "0") {
 			mod.settings.useDelay = false;
 			mod.settings.delay = 5500;
-			command.message('设置开盒最小间隔延迟为: ' + '无延迟');
+			command.message('设置开盒最小间隔延迟为: ' + '<font color="#56B4E9">无延迟</font>');
 		} else if (!isNaN(arg)) {
 			mod.settings.useDelay = true;
 			mod.settings.delay = parseInt(arg);
