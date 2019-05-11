@@ -1,9 +1,8 @@
 {
     "files": {
-        "README.md": "825d49cb92f45e223b041a865b692fe99ef80ee93def58e14172079bc137a57b",
-        "index.js": "85f0768d26754da9c40fdcbdb6914f38582daaf42935995f8c0d7a67001b1e64",
-        "module.json": "dc1b30c707f0bc09c902dc86c28ab21c2aeabcf75c3bbd6f0f8f85ca14f71716",
-        "settings_migrator.js": "dbe2feb6b0d15eb98fcc51c0c1aa9ebec5664df29a4fc5fee1de892be584d49b"
+        "index.js": "c3d517596df987c8fad86a93c2ec8b82f401daa489a59970d88d15e7234bfc76",
+        "module.json": "4fa64b5595a9fa52564f6d64fe148f8c6dd65dd85b4f9e9c228ed4e6c7d626af",
+        "settings_migrator.js": "651233a6e9ef64cac706f988cc4fb951571f45e5400e7c09290eab677295ff66"
     },
     "defs": {
         "C_GACHA_TRY": 1,

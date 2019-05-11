@@ -1,7 +1,7 @@
 const DefaultSettings = {
     "enabled": false,
     "useDelay": false, // 开盒延迟
-    "delay": 5500      // 默认 5500ms (5.5s)
+    "delay": 5500      // 延迟5500ms (5.5s)
 };
 
 module.exports = function MigrateSettings(from_ver, to_ver, settings) {

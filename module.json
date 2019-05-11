@@ -10,7 +10,10 @@
     },
     "author": "ZC",
     "description": "自动连续开盒脚本",
-    "servers": ["https://raw.githubusercontent.com/zc149352394/Box-Opener/master/"],
-    "supportUrl": "https://github.com/zc149352394/Box-Opener/issues",
+    "servers": ["https://raw.githubusercontent.com/tera-mod/Box-Opener/master/"],
+    "supportUrl": "https://github.com/tera-mod/Box-Opener/issues",
+    "dependencies": {
+        "tera-message": "https://raw.githubusercontent.com/tera-mod/tera-message/master/module.json"
+    },
     "version": "81.03"
 }
