@@ -23,27 +23,54 @@ module.exports = function BoxOpener(mod) {
 		statUsed = 0,
 		statStarted = null,
 		scanning = false,
-		boxId = 166901, // MWA box as default.
-		inventory = null;
+		boxId = 166901 // MWA box as default.
 	
-	mod.command.add(["开盒", "box"], () => {
-		if (!mod.settings.enabled && !scanning) {
-			scanning = true;
-			load();
-			MSG.chat("Box-Opener " + MSG.TIP("请打开一个盒子, 脚本会循环使用它"));
-		} else {
-			stop();
+	mod.game.initialize("inventory")
+	
+	mod.game.inventory.on('update', () => {
+		if (!mod.settings.enabled) return;
+		
+		isLooting = false; // event comes only after all S_SYSTEM_MESSAGE_LOOT_ITEM (probably)
+		
+		if (mod.settings.trash) {
+			mod.game.inventory.findAllInBagOrPockets(mod.settings.trashList).forEach(item => {
+				delItem(item);
+			});
 		}
-	});
+	})
 	
-	mod.command.add("开盒延迟", (arg) => {
-		if (!arg || isNaN(arg) || parseInt(arg) < 0) {
-			mod.settings.useDelay = false;
-			MSG.chat("设置开盒间隔 " + MSG.BLU("无延迟"));
+	mod.command.add(["box", "开盒"], (arg, number) => {
+		if (!arg) {
+			if (!mod.settings.enabled && !scanning) {
+				scanning = true;
+				load();
+				MSG.chat(MSG.TIP("请打开一个盒子, 脚本会循环使用它"));
+			} else {
+				stop();
+			}
 		} else {
-			mod.settings.useDelay = true;
-			mod.settings.delay = parseInt(arg);
-			MSG.chat("设置开盒间隔 " + MSG.BLU((mod.settings.delay / 1000) + "秒/次" ));
+			switch (arg) {
+				case "delay":
+				case "延迟":
+					number = parseInt(number);
+					if (isNaN(number) || number < 5) {
+						mod.settings.useDelay = false;
+						MSG.chat("需要大于5的[数字]类型参数, 恢复默认 " + MSG.BLU("0.2s(200ms)" + "秒/次"));
+					} else {
+						mod.settings.useDelay = true;
+						mod.settings.delay = parseInt(number) * 1000;
+						MSG.chat("已设置开盒延迟 " + MSG.BLU((mod.settings.delay / 1000) + "秒/次"));
+					}
+					break;
+				case "trash":
+				case "垃圾":
+					mod.settings.trash = !mod.settings.trash;
+					MSG.chat("垃圾丢弃 " + (mod.settings.trash ? MSG.BLU("已启用") : MSG.YEL("已禁用")));
+					break;
+				default:
+					MSG.chat("Box-Opener " + MSG.RED("无效的参数!"))
+				break;
+			}
 		}
 	});
 	
@@ -52,70 +79,34 @@ module.exports = function BoxOpener(mod) {
 	});
 	
 	function load() {
-		hook('S_INVEN', 18, (event) => {
-			if (mod.settings.enabled) {
-				isLooting = false; // S_INVEN comes only after all S_SYSTEM_MESSAGE_LOOT_ITEM
-				
-				if (event.first) {
-					inventory = [];
-				} else if (!inventory) {
-					return;
-				}
-				
-				for (let item of event.items) {
-					inventory.push(item);
-				}
-				
-				if (!event.more) {
-					let box = false;
-					for (let item of inventory) {
-						if (item.slot < 40) {
-							continue;
-						}
-						if (item.id == boxId) {
-							box = true;
-						}
-					}
-					if (!box) {
-						MSG.chat("所有盒子开完 " + MSG.RED("脚本停止"));
-						stop();
-					}
-					inventory.splice(0, inventory.length)
-					inventory = [];
-					inventory = null;
-				}
-			}
-		});
-		
 		hook('C_USE_ITEM', 3, (event) => {
 			if (scanning) {
-				if (scanning) {
-					scanning = false;
-					
-					boxEvent = event;
-					boxId = event.id;
-					MSG.chat("已选择道具编号: "   + MSG.TIP(boxId)
-						+ "\n\t - 开盒脚本: " + MSG.BLU("启动")
-						+ "\n\t - 开盒间隔: " + MSG.BLU((mod.settings.useDelay ? (mod.settings.delay / 1000) + "秒/次" : "无延迟"))
-					);
-					
-					let d = new Date();
-					statStarted = d.getTime();
-					statOpened = 0;
-					statUsed = 0;
-					mod.settings.enabled = true;
-					timer = setTimeout(openBox, (mod.settings.useDelay ? mod.settings.delay : 200));
-				}
+				scanning = false;
+				
+				boxEvent = event;
+				boxId = event.id;
+				MSG.chat("已选择道具 " + MSG.BLU(mod.game.inventory.findInBagOrPockets(boxId).data.name) + " - " + MSG.TIP(boxId)
+					+ "\n\t - 开盒脚本: " + MSG.BLU("启动")
+					+ "\n\t - 开盒间隔: " + MSG.BLU((mod.settings.useDelay ? (mod.settings.delay / 1000) + "秒/次" : "无延迟"))
+				);
+				
+				let d = new Date();
+				statStarted = d.getTime();
+				statOpened = 0;
+				statUsed = 0;
+				mod.settings.enabled = true;
+				timer = setTimeout(useItem, (mod.settings.useDelay ? mod.settings.delay : 200));
 			}
 		});
 		
 		hook('S_SYSTEM_MESSAGE_LOOT_ITEM', 1, (event) => {
-			if (!gacha_detected && !isLooting && boxEvent) {
+			if (boxEvent && !isLooting && !gacha_detected) {
 				isLooting = true;
 				statOpened++;
+				
 				if (!mod.settings.useDelay) {
 					clearTimeout(timer);
-					openBox();
+					useItem();
 				}
 			}
 		});
@@ -132,7 +123,7 @@ module.exports = function BoxOpener(mod) {
 				statOpened++;
 				if (!mod.settings.useDelay) {
 					clearTimeout(timer);
-					openBox();
+					useItem();
 				}
 			}
 		});
@@ -151,12 +142,25 @@ module.exports = function BoxOpener(mod) {
 		});
 	}
 	
-	function openBox() {
-		boxEvent.loc = location.loc;
-		boxEvent.w = location.w;
-		mod.send('C_USE_ITEM', 3, boxEvent);
-		statUsed++;
-		timer = setTimeout(openBox, (mod.settings.useDelay ? mod.settings.delay : 200));
+	function useItem() {
+		if (mod.game.inventory.getTotalAmountInBagOrPockets(boxEvent.id) > 0) {
+			boxEvent.loc = location.loc;
+			boxEvent.w = location.w;
+			mod.send('C_USE_ITEM', 3, boxEvent);
+			statUsed++;
+			timer = setTimeout(useItem, (mod.settings.useDelay ? mod.settings.delay : 200));
+		} else {
+			stop();
+		}
+	}
+	
+	function delItem(item) {
+		mod.send('C_DEL_ITEM', 3, {
+			gameId: mod.game.me.gameId,
+			pocket: item.pocket,
+			slot: item.slot,
+			amount: item.amount
+		})
 	}
 	
 	function stop() {

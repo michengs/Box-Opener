@@ -1,7 +1,17 @@
 const DefaultSettings = {
-    "enabled": false,
+    "enabled":  false,
     "useDelay": false, // 开盒延迟
-    "delay": 5500      // 延迟5500ms (5.5s)
+    "delay": 5500,     // 延迟5500ms (5.5s)
+    "trash": true,
+    "trashList": [
+        80078, // 利卡诺勒啤酒
+        80079, // 覆盆子酒
+        80080, // 天蓮花酒
+        80082, // 塔克式蜂蜜南瓜酒
+
+        80089, // 达登的卷曲假发
+        80090  // 梅丽莎的厨师帽
+    ]
 };
 
 module.exports = function MigrateSettings(from_ver, to_ver, settings) {

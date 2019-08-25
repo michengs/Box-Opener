@@ -1,16 +1,16 @@
 {
     "files": {
-        "index.js": "c3d517596df987c8fad86a93c2ec8b82f401daa489a59970d88d15e7234bfc76",
-        "module.json": "4fa64b5595a9fa52564f6d64fe148f8c6dd65dd85b4f9e9c228ed4e6c7d626af",
-        "settings_migrator.js": "651233a6e9ef64cac706f988cc4fb951571f45e5400e7c09290eab677295ff66"
+        "index.js": "3395d590e22644229e86d3af4cb2687ad16f630a8cc633a5b096f7a5d9858459",
+        "module.json": "476c6a0a249afc46f5f5c843e5aab6fec6770ebb410c6c0f327c67945c44cf4d",
+        "settings_migrator.js": "968ad1db6126c6420948eac09f42052bc893565ef115650766181099e83721b1"
     },
     "defs": {
+        "C_DEL_ITEM": 3,
         "C_GACHA_TRY": 1,
         "C_PLAYER_LOCATION": 5,
         "C_USE_ITEM": 3,
         "S_GACHA_END": 1,
         "S_GACHA_START": 1,
-        "S_INVEN": 18,
         "S_SYSTEM_MESSAGE": 1,
         "S_SYSTEM_MESSAGE_LOOT_ITEM": 1
     }

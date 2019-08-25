@@ -1,19 +1,19 @@
 {
-    "disableAutoUpdate": false,
     "name": "Box-Opener",
     "options": {
         "niceName": "自动开盒",
-        "guiName": "自动开盒",
+        "guiName": "自动开盒(Box-Opener)",
         "settingsFile": "config.json",
         "settingsMigrator": "settings_migrator.js",
-        "settingsVersion": 1
+        "settingsVersion": 2
     },
-    "author": "ZC",
-    "description": "自动连续开盒脚本",
+    "author": "ZC / Owyn",
+    "description": "自动开盒 / 道具连点 脚本",
     "servers": ["https://raw.githubusercontent.com/tera-mod/Box-Opener/master/"],
     "supportUrl": "https://github.com/tera-mod/Box-Opener/issues",
     "dependencies": {
+        "tera-game-state": "https://raw.githubusercontent.com/tera-toolbox/tera-game-state/master/module.json",
         "tera-message": "https://raw.githubusercontent.com/tera-mod/tera-message/master/module.json"
     },
-    "version": "81.03"
+    "version": "85.06"
 }
