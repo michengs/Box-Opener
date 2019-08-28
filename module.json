@@ -12,7 +12,6 @@
     "servers": ["https://raw.githubusercontent.com/tera-mod/Box-Opener/master/"],
     "supportUrl": "https://github.com/tera-mod/Box-Opener/issues",
     "dependencies": {
-        "tera-game-state": "https://raw.githubusercontent.com/tera-toolbox/tera-game-state/master/module.json",
         "tera-message": "https://raw.githubusercontent.com/tera-mod/tera-message/master/module.json"
     },
     "version": "85.06"
