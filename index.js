@@ -53,7 +53,7 @@ module.exports = function BoxOpener(mod) {
 				case "delay":
 				case "延迟":
 					number = parseInt(number);
-					if (isNaN(number) || number < 5) {
+					if (isNaN(number) || number < 1) {
 						mod.settings.useDelay = false;
 						MSG.chat("需要大于5的[数字]类型参数, 恢复默认 " + MSG.BLU("0.2s(200ms)" + "秒/次"));
 					} else {
