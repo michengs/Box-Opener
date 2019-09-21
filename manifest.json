@@ -1,8 +1,8 @@
 {
     "files": {
-        "index.js": "722cbb3058d1fba2c26d2cfe08139d7dabb6ba174e11101dea06775ce2315e2d",
-        "module.json": "ca51ad0ebf029c858722c8ca06d21dbd1e6a1cebd125ad2ceec6307818511805",
-        "settings_migrator.js": "968ad1db6126c6420948eac09f42052bc893565ef115650766181099e83721b1"
+        "index.js": "e0dab77222e506b53c643178ca60ce496d6e2f4998aadb4f780381797bf28ce8",
+        "module.json": "c2f1b9726ca063ccd7345c68d37581c6c5c94eba37ea5d1a7c90228d89cef594",
+        "settings_migrator.js": "9916d0be8b8c616065609b28027e2ffb2d9ade7907f6b4d3b2d8ecdaae54f35f"
     },
     "defs": {
         "C_DEL_ITEM": 3,

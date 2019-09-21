@@ -2,17 +2,6 @@ module.exports = function BoxOpener(mod) {
 	const Message = require('../tera-message')
 	const MSG = new Message(mod)
 	
-	if (mod.proxyAuthor !== 'caali') {
-		const options = require('./module').options
-		if (options) {
-			const settingsVersion = options.settingsVersion
-			if (settingsVersion) {
-				mod.settings = require('./' + (options.settingsMigrator || 'settings_migrator.js'))(mod.settings._version, settingsVersion, mod.settings)
-				mod.settings._version = settingsVersion
-			}
-		}
-	}
-	
 	let hooks = [],
 		boxEvent = null,
 		gacha_detected = false,
@@ -212,5 +201,4 @@ module.exports = function BoxOpener(mod) {
 	function hook() {
 		hooks.push(mod.hook(...arguments))
 	}
-	
 }
