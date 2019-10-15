@@ -1,7 +1,4 @@
 module.exports = function BoxOpener(mod) {
-	const Message = require('../tera-message')
-	const MSG = new Message(mod)
-	
 	let hooks = [],
 		boxEvent = null,
 		gacha_detected = false,
@@ -22,7 +19,7 @@ module.exports = function BoxOpener(mod) {
 		isLooting = false; // event comes only after all S_SYSTEM_MESSAGE_LOOT_ITEM (probably)
 		
 		if (mod.settings.trash) {
-			mod.game.inventory.findAllInBagOrPockets(mod.settings.trashList).forEach(item => {
+			mod.game.inventory.findAll(mod.settings.trashList).forEach(item => {
 				delItem(item);
 			});
 		}
@@ -33,7 +30,7 @@ module.exports = function BoxOpener(mod) {
 			if (!mod.settings.enabled && !scanning) {
 				scanning = true;
 				load();
-				MSG.chat(MSG.TIP("请打开一个盒子, 脚本会循环使用它"));
+				sendMessage("请打开(使用)一个盒子(项目), 脚本会循环使用它");
 			} else {
 				stop();
 			}
@@ -44,20 +41,20 @@ module.exports = function BoxOpener(mod) {
 					number = parseInt(number);
 					if (isNaN(number) || number < 1) {
 						mod.settings.useDelay = false;
-						MSG.chat("需要大于5的[数字]类型参数, 恢复默认 " + MSG.BLU("0.2s(200ms)" + "秒/次"));
+						sendMessage("需要大于5的[数字]类型参数, 恢复默认 0.2 秒/次");
 					} else {
 						mod.settings.useDelay = true;
 						mod.settings.delay = parseInt(number) * 1000;
-						MSG.chat("已设置开盒延迟 " + MSG.BLU((mod.settings.delay / 1000) + "秒/次"));
+						sendMessage("已设置开盒延迟 " + (mod.settings.delay / 1000) + " 秒/次");
 					}
 					break;
 				case "trash":
 				case "垃圾":
 					mod.settings.trash = !mod.settings.trash;
-					MSG.chat("垃圾丢弃 " + (mod.settings.trash ? MSG.BLU("已启用") : MSG.YEL("已禁用")));
+					sendMessage("垃圾丢弃 " + (mod.settings.trash ? "On" : "Off"));
 					break;
 				default:
-					MSG.chat("Box-Opener " + MSG.RED("无效的参数!"))
+					sendMessage("无效的参数!")
 				break;
 			}
 		}
@@ -74,9 +71,9 @@ module.exports = function BoxOpener(mod) {
 				
 				boxEvent = event;
 				boxId = event.id;
-				MSG.chat("已选择道具 " + MSG.BLU(mod.game.inventory.findInBagOrPockets(boxId).data.name) + " - " + MSG.TIP(boxId)
-					+ "\n\t - 开盒脚本: " + MSG.BLU("启动")
-					+ "\n\t - 开盒间隔: " + MSG.BLU((mod.settings.useDelay ? (mod.settings.delay / 1000) + "秒/次" : "无延迟"))
+				sendMessage(
+					"\n\t - 选中目标: "  + boxId + " - " + mod.game.inventory.find(boxId).data.name +
+					"\n\t - 开盒间隔: " + (mod.settings.useDelay ? (mod.settings.delay / 1000) + " 秒/次" : "无延迟")
 				);
 				
 				let d = new Date();
@@ -125,14 +122,14 @@ module.exports = function BoxOpener(mod) {
 			}
 			
 			if (msg.id === 'SMT_ITEM_MIX_NEED_METERIAL' || msg.id === 'SMT_CANT_CONVERT_NOW') {
-				MSG.chat("无法再开启盒子 " + MSG.RED("脚本停止"));
+				sendMessage("无法再开启盒子 脚本停止");
 				stop();
 			}
 		});
 	}
 	
 	function useItem() {
-		if (mod.game.inventory.getTotalAmountInBagOrPockets(boxEvent.id) > 0) {
+		if (mod.game.inventory.getTotalAmount(boxEvent.id) > 0) {
 			boxEvent.loc = location.loc;
 			boxEvent.w = location.w;
 			mod.send('C_USE_ITEM', 3, boxEvent);
@@ -156,7 +153,7 @@ module.exports = function BoxOpener(mod) {
 		unload();
 		if (scanning) {
 			scanning = false;
-			MSG.chat("自动开盒脚本 " + MSG.YEL("关闭"));
+			sendMessage("自动开盒脚本 关闭");
 		} else {
 			clearTimeout(timer);
 			mod.settings.enabled = false;
@@ -173,9 +170,9 @@ module.exports = function BoxOpener(mod) {
 			let h = addZero(d.getHours());
 			let m = addZero(d.getMinutes());
 			let s = addZero(d.getSeconds());
-			MSG.chat("完成次数: "     + MSG.TIP(statOpened)
-				+ "\n\t - 共计用时: " + MSG.YEL(h + ":" + m + ":" + s)
-				+ "\n\t - 平均用时: " + MSG.BLU(((timeElapsedMSec / statOpened) / 1000).toPrecision(2) + "秒/次")
+			sendMessage("完成次数: " + statOpened +
+				"\n\t - 共计用时: " + h + ":" + m + ":" + s +
+				"\n\t - 平均用时: " + ((timeElapsedMSec / statOpened) / 1000).toPrecision(2) + " 秒/次"
 			);
 			statOpened = 0;
 			statUsed = 0;
@@ -201,4 +198,6 @@ module.exports = function BoxOpener(mod) {
 	function hook() {
 		hooks.push(mod.hook(...arguments))
 	}
+	
+	function sendMessage(msg) { mod.command.message(msg) }
 }
