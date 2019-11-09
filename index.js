@@ -125,6 +125,7 @@ module.exports = function BoxOpener(mod) {
 				sendMessage("无法再开启盒子 脚本停止");
 				stop();
 			}
+			return false;
 		});
 	}
 	
