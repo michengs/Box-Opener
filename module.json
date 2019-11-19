@@ -11,5 +11,5 @@
     "description": "自动开盒 / 道具连点 脚本",
     "servers": ["https://raw.githubusercontent.com/tera-mod/Box-Opener/master/"],
     "supportUrl": "https://github.com/tera-mod/Box-Opener/issues",
-    "version": "86.06"
+    "version": "87.05"
 }
