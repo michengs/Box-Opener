@@ -25,7 +25,7 @@ module.exports = function BoxOpener(mod) {
 		}
 	})
 	
-	mod.command.add(["box", "开盒"], (arg, number) => {
+	mod.command.add(["box", "开盒","開盒"], (arg, number) => {
 		if (!arg) {
 			if (!mod.settings.enabled && !scanning) {
 				scanning = true;
@@ -38,6 +38,7 @@ module.exports = function BoxOpener(mod) {
 			switch (arg) {
 				case "delay":
 				case "延迟":
+				case "延遲":				
 					number = parseInt(number);
 					if (isNaN(number) || number < 1) {
 						mod.settings.useDelay = false;
